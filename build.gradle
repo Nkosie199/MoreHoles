@@ -1,51 +1,53 @@
 buildscript {
-    repositories {
-        mavenCentral()
-        mavenLocal()
-    }
-    dependencies {
-    }
+  repositories {
+    mavenCentral()
+    gradlePluginPortal()
+  }
+  dependencies {
+    classpath "org.docstr:gwt-gradle-plugin:$gwtPluginVersion"
+  }
 }
 
 allprojects {
-    apply plugin: "eclipse"
-    apply plugin: "idea"
+  apply plugin: 'eclipse'
+  apply plugin: 'idea'
 
-    version = '1.0'
-    ext {
-        appName = 'my-gdx-game'
-        gdxVersion = '1.3.1'
-        roboVMVersion = '0.0.14'
+  idea {
+    module {
+      outputDir file('build/classes/java/main')
+      testOutputDir file('build/classes/java/test')
     }
-
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
-    }
+  }
 }
 
-project(":desktop") {
-    apply plugin: "java"
+configure(subprojects) {
+  apply plugin: 'java-library'
+  sourceCompatibility = 8
 
-
-    dependencies {
-        compile project(":core")
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+  // The web build looks assets up by name in assets.txt.
+  tasks.register('generateAssetList') {
+    inputs.dir("${project.rootDir}/assets/")
+    File assetsFolder = new File("${project.rootDir}/assets/")
+    File assetsFile = new File(assetsFolder, "assets.txt")
+    assetsFile.delete()
+    fileTree(assetsFolder).collect { assetsFolder.relativePath(it) }.each {
+      assetsFile.append(it + "\n")
     }
+  }
+  processResources.dependsOn 'generateAssetList'
+
+  compileJava {
+    options.incremental = true
+  }
 }
 
-project(":core") {
-    apply plugin: "java"
-
-
-    dependencies {
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-    }
+subprojects {
+  version = "$projectVersion"
+  ext.appName = 'MoreHoles'
+  repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+  }
 }
 
-tasks.eclipse.doLast {
-    delete ".project"
-}
+eclipse.project.name = 'MoreHoles-parent'

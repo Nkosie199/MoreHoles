@@ -1,11 +1,17 @@
-apply plugin: "java"
-
-sourceCompatibility = 1.6
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+eclipse.project.name = appName + '-core'
 
-sourceSets.main.java.srcDirs = [ "src/" ]
+dependencies {
+  api "com.badlogicgames.gdx:gdx:$gdxVersion"
 
+  if(enableGraalNative == 'true') {
+    implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
+  }
 
-eclipse.project {
-    name = appName + "-core"
+  testImplementation "org.junit.jupiter:junit-jupiter:5.10.2"
+  testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+test {
+  useJUnitPlatform()
 }
