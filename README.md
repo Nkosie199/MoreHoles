@@ -19,17 +19,38 @@ runs in a browser and on a desktop.
 
 Holes are the whole game: Molly needs them to breathe and eat, and every hole is a way in for snakes.
 
-**Controls:** arrows or WASD move, and moving into soil digs. Space packs dirt into the tunnel behind Molly (she earns
-one dirt per tile dug, up to five). P or Esc pauses. On a phone, hold where Molly should go, tap Molly to pack dirt,
-and tap the top bar to pause.
+## Controls
 
-**Put it on LuckyB:** Profile → Publish a Game → **New Tab**, and use the link above as the Launch URL.
+| | Keyboard (desktop and browser) | Touch (phones and tablets) |
+|---|---|---|
+| Move, and dig by moving into soil | Arrows or WASD | Hold your finger where Molly should go |
+| Pack dirt into the tunnel behind Molly | Space | Tap Molly |
+| Pause / carry on | P or Esc | Tap the top bar |
+| Start, or play again after game over | Enter or Space | Tap anywhere |
 
-## Run it
+Molly earns one dirt per tile dug and can carry five.
+
+## Platforms
+
+- **Browser** (what LuckyB players get): fills the window and keeps its square shape, so it works in portrait and
+  landscape. On a desktop browser, click the game once so it gets the keyboard. On a phone use the touch controls.
+- **Desktop** (Windows, macOS, Linux): a 640x640 window, keyboard only.
+
+## Build and run
 
 - Desktop: `gradlew lwjgl3:run` (Windows: `gradlew.bat lwjgl3:run`).
-- Browser: `gradlew html:dist` builds it into `html/build/dist`; serve that folder with any web server.
+- Browser: `gradlew html:dist` builds into `html/build/dist`; serve it, e.g.
+  `python -m http.server 8090 --directory html/build/dist`, then open http://localhost:8090.
 - Tests: `gradlew core:test` checks the game rules in `core/src/main/java/com/mygdx/moreholes/world`.
+
+## Deploy
+
+Every push to `master` runs `.github/workflows/web.yml`, which builds the browser version and pushes it to the
+`gh-pages` branch. GitHub Pages serves it at https://nkosie199.github.io/MoreHoles/ once Pages is turned on in the
+repo's Settings → Pages (deploy from branch `gh-pages`, `/ (root)`).
+
+**Put it on LuckyB:** Profile → Publish a Game, Launch Mode **New Tab**, the link above as Launch URL, 1 COA. The full
+process is in LuckyB's `docs/HOST_YOUR_GAME.md`.
 
 ## Code
 
